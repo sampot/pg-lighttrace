@@ -1,41 +1,136 @@
 <!doctype html>
-<html lang="zh-Hant" data-game="pg-lighttrace">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#050914" />
-  <meta name="description" content="在九乘九光網中轉向、封地，逼迫自動騎手撞上邊界或光牆。" />
-  <title>光跡圍城</title>
-  <link rel="stylesheet" href="./styles.css" />
-</head>
-<body>
-  <div class="ambience" aria-hidden="true"><i></i><i></i><i></i></div>
-  <main>
-    <header class="topbar">
-      <div><p class="eyebrow">NEON TERRITORY</p><h1>光跡圍城</h1></div>
-      <button id="sound" class="quiet" type="button" aria-pressed="false">音樂：關</button>
-    </header>
-    <section id="lobby" class="lobby panel">
-      <div class="seal" aria-hidden="true">⌁</div>
-      <p>在九乘九光網中轉向、封地，逼迫自動騎手撞上邊界或光牆。</p>
-      <div class="record"><span>場域最佳</span><strong id="best">0</strong></div>
-      <button id="start" class="primary" type="button">開始遊戲</button>
-    </section>
-    <section id="game" hidden>
-      <div id="hud" class="hud" aria-label="遊戲狀態"></div>
-      <section class="stage panel">
-        <div id="board" class="board" aria-label="遊戲場景"></div>
-        <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#04070f" />
+    <meta
+      name="description"
+      content="光跡對決：方向鍵或觸控方向墊即時操控光車，在光網上留下光牆，逼對手撞牆。生存對決與佔格爭霸兩種模式。"
+    />
+    <title>光跡對決</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <div class="brand">
+          <small>LIGHT CYCLE DUEL</small>
+          <h1>光跡對決</h1>
+        </div>
+        <button id="sound" class="ghost" type="button" aria-pressed="true">♫ 音效</button>
+      </header>
+
+      <section id="lobby" class="panel">
+        <p class="lead">
+          光車永遠往前跑，身後留下不會消失的光牆。撞到邊界、光柱或任何一道光牆就出局——
+          你要做的是轉彎，把對手的路收乾淨。
+        </p>
+
+        <div class="field">
+          <span class="field-label">模式</span>
+          <div class="segmented" id="mode-pick" role="radiogroup" aria-label="模式">
+            <button type="button" role="radio" data-mode="survival" aria-checked="true">
+              生存對決<i>三勝制，最後活著的人贏</i>
+            </button>
+            <button type="button" role="radio" data-mode="territory" aria-checked="false">
+              佔格爭霸<i>限時搶地盤，先佔滿目標格數</i>
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">難度</span>
+          <div class="segmented tight" id="diff-pick" role="radiogroup" aria-label="難度"></div>
+        </div>
+
+        <div class="field">
+          <span class="field-label">對手數</span>
+          <div class="segmented tight" id="rival-pick" role="radiogroup" aria-label="對手數"></div>
+        </div>
+
+        <ul class="rules">
+          <li><b>不能掉頭。</b>只能左右轉，反方向的輸入會被忽略</li>
+          <li><b>光牆是永久的。</b>包含你自己的，繞回頭一樣會撞死</li>
+          <li><b>對撞算雙亡。</b>兩台車搶同一格，兩邊一起爆</li>
+        </ul>
+
+        <p class="record">
+          最佳成績 · 生存 <strong id="best-survival">0</strong> · 佔格
+          <strong id="best-territory">0</strong>
+        </p>
+        <div class="lobby-actions">
+          <button id="start" class="primary" type="button">進入光網</button>
+        </div>
+        <a class="credits-link" href="./ATTRIBUTION.md">製作與素材署名</a>
       </section>
-      <p id="message" class="message" role="status" aria-live="polite"></p>
-      <section id="details" class="details panel"></section>
-      <div id="actions" class="actions"></div>
-    </section>
-    <footer><button id="help" class="text-button" type="button">玩法</button><a href="./ATTRIBUTION.md">素材署名</a></footer>
-  </main>
-  <section id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
-    <div class="sheet-card"><p class="eyebrow">NEON TERRITORY</p><h2 id="sheet-title">玩法</h2><div id="sheet-body"></div><button id="sheet-close" class="primary" type="button">知道了</button></div>
-  </section>
-  <script type="module" src="./app.js"></script>
-</body>
+
+      <section id="game" hidden>
+        <div class="hud" id="hud"></div>
+
+        <div class="stage-wrap">
+          <canvas id="stage" aria-label="光網競技場，用方向鍵或下方方向墊操控光車"></canvas>
+        </div>
+
+        <p id="msg" class="msg" role="status" aria-live="polite"></p>
+
+        <div class="side">
+          <div class="pad" id="pad" role="group" aria-label="方向墊">
+            <button type="button" class="pad-btn up" data-dir="N" aria-label="上">▲</button>
+            <button type="button" class="pad-btn left" data-dir="W" aria-label="左">◀</button>
+            <button
+              type="button"
+              class="pad-btn pause"
+              id="pause"
+              aria-pressed="false"
+              aria-label="暫停"
+            >
+              ॥
+            </button>
+            <button type="button" class="pad-btn right" data-dir="E" aria-label="右">▶</button>
+            <button type="button" class="pad-btn down" data-dir="S" aria-label="下">▼</button>
+          </div>
+
+          <div class="controls">
+            <div id="riders" class="riders"></div>
+            <button id="quit" class="ghost danger-ghost" type="button">離開光網</button>
+          </div>
+        </div>
+
+        <p class="hint">鍵盤：方向鍵／WASD 轉彎，空白鍵暫停。手機：點方向墊，或直接在場上滑。</p>
+      </section>
+
+      <div id="overlay" class="overlay" hidden>
+        <div
+          class="overlay-card"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="overlay-title"
+        >
+          <h2 id="overlay-title"></h2>
+          <p id="overlay-body"></p>
+          <ul id="overlay-stats" class="overlay-stats"></ul>
+          <div id="overlay-actions" class="overlay-actions"></div>
+        </div>
+      </div>
+
+      <div id="confirm" class="overlay" hidden>
+        <div
+          class="overlay-card confirm-card"
+          role="alertdialog"
+          aria-modal="true"
+          aria-labelledby="confirm-title"
+          aria-describedby="confirm-body"
+        >
+          <h2 id="confirm-title"></h2>
+          <p id="confirm-body"></p>
+          <div class="overlay-actions">
+            <button id="confirm-cancel" class="primary" type="button">取消</button>
+            <button id="confirm-ok" class="danger" type="button">確定</button>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script type="module" src="./app.js"></script>
+  </body>
 </html>
