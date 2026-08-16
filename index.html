@@ -1,43 +1,41 @@
 <!doctype html>
-<html lang="zh-Hant">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <meta name="theme-color" content="#050510" />
-    <meta name="description" content="留跡包圍領地。" />
-    <title>光跡對決</title>
-    <link rel="stylesheet" href="./styles.css" />
-  </head>
-  <body>
-    <div class="glow" aria-hidden="true"></div>
-    <main>
-      <header class="top">
-        <div>
-          <p class="eyebrow" id="genre">光循環／留跡包圍</p>
-          <h1 id="title">光跡對決</h1>
-        </div>
-        <button id="sound" class="icon" type="button" aria-pressed="true">♪ 音樂開</button>
-      </header>
-
-      <section id="lobby" class="panel">
-        <img class="hero-art" src="./assets/images/hero.png" alt="" width="120" height="120" />
-        <p id="blurb">留跡包圍領地。</p>
-        <p class="meta">本機最佳分 <strong id="best">0</strong></p>
-        <button id="start" class="primary" type="button">開始</button>
-        <p class="fine"><a href="./ATTRIBUTION.md">署名</a></p>
+<html lang="zh-Hant" data-game="pg-lighttrace">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#050914" />
+  <meta name="description" content="在九乘九光網中轉向、封地，逼迫自動騎手撞上邊界或光牆。" />
+  <title>光跡圍城</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="ambience" aria-hidden="true"><i></i><i></i><i></i></div>
+  <main>
+    <header class="topbar">
+      <div><p class="eyebrow">NEON TERRITORY</p><h1>光跡圍城</h1></div>
+      <button id="sound" class="quiet" type="button" aria-pressed="false">音樂：關</button>
+    </header>
+    <section id="lobby" class="lobby panel">
+      <div class="seal" aria-hidden="true">⌁</div>
+      <p>在九乘九光網中轉向、封地，逼迫自動騎手撞上邊界或光牆。</p>
+      <div class="record"><span>場域最佳</span><strong id="best">0</strong></div>
+      <button id="start" class="primary" type="button">開始遊戲</button>
+    </section>
+    <section id="game" hidden>
+      <div id="hud" class="hud" aria-label="遊戲狀態"></div>
+      <section class="stage panel">
+        <div id="board" class="board" aria-label="遊戲場景"></div>
+        <div class="progress" aria-hidden="true"><i id="progress"></i></div>
       </section>
-
-      <section id="game" hidden>
-        <div class="status">
-          <span id="badge">進行中</span>
-          <p id="hud"></p>
-        </div>
-        <div id="board" class="board" aria-hidden="true"></div>
-        <p id="msg" class="msg" aria-live="polite"></p>
-        <pre id="extra" class="extra"></pre>
-        <div id="actions" class="actions"></div>
-      </section>
-    </main>
-    <script type="module" src="./app.js"></script>
-  </body>
+      <p id="message" class="message" role="status" aria-live="polite"></p>
+      <section id="details" class="details panel"></section>
+      <div id="actions" class="actions"></div>
+    </section>
+    <footer><button id="help" class="text-button" type="button">玩法</button><a href="./ATTRIBUTION.md">素材署名</a></footer>
+  </main>
+  <section id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+    <div class="sheet-card"><p class="eyebrow">NEON TERRITORY</p><h2 id="sheet-title">玩法</h2><div id="sheet-body"></div><button id="sheet-close" class="primary" type="button">知道了</button></div>
+  </section>
+  <script type="module" src="./app.js"></script>
+</body>
 </html>
