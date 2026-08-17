@@ -1,0 +1,27 @@
+{
+  "version": 1,
+  "rev": "9c4e892",
+  "files": [
+    "app.js",
+    "assets/audio/boost.ogg",
+    "assets/audio/click.ogg",
+    "assets/audio/crash.ogg",
+    "assets/audio/kill.ogg",
+    "assets/audio/lose.ogg",
+    "assets/audio/music.ogg",
+    "assets/audio/ready.ogg",
+    "assets/audio/round.ogg",
+    "assets/audio/turn.ogg",
+    "assets/audio/win.ogg",
+    "assets/licenses/kenney-digital-audio.txt",
+    "assets/licenses/kenney-interface-sounds.txt",
+    "assets/licenses/kenney-sci-fi-sounds.txt",
+    "assets/licenses/not-jam-music-pack.txt",
+    "audio.js",
+    "functions.js",
+    "game.js",
+    "index.html",
+    "persist.js",
+    "styles.css"
+  ]
+}
